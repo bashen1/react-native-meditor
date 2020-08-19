@@ -1,0 +1,22 @@
+{
+  "name": "react-native-meditor",
+  "description": "React Native Rich Editor",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "author": {
+    "name": "bashen1",
+    "email": "maochunjie@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bashen1/react-native-meditor.git"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+  },
+  "peerDependencies": {
+    "react-native": ">=0.50.0",
+    "react-native-webview": ">=7.5.2"
+  }
+}
