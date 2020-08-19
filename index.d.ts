@@ -65,6 +65,21 @@ declare module 'react-native-pell-rich-editor' {
             contentCSSText?: string; // editor content css text
             cssText?: string; // editor global css text
         };
+
+        /**
+         * paragraphSeparator, The default value is p.
+         */
+        paragraphSeparator?: string;
+
+        /**
+         * paragraphSeparatorClass
+         */
+        paragraphSeparatorClass?: string;
+
+        /**
+         * paragraphSeparatorStyle
+         */
+        paragraphSeparatorStyle?: string;
     }
 
     export type SelectionChangeListener = (items: string[]) => void;

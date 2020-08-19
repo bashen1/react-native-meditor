@@ -40,9 +40,9 @@ export default class RichTextEditor extends Component {
         that.setRef = that.setRef.bind(that);
         that._keyOpen = false;
         that.selectionChangeListeners = [];
-        const {editorStyle: {backgroundColor, color, placeholderColor, cssText, contentCSSText} = {}, html} = props;
+        const {editorStyle: {backgroundColor, color, placeholderColor, cssText, contentCSSText} = {}, html, paragraphSeparator, paragraphSeparatorClass, paragraphSeparatorStyle} = props;
         that.state = {
-            html: {html: html || createHTML({backgroundColor, color, placeholderColor, cssText, contentCSSText})},
+            html: {html: html || createHTML({backgroundColor, color, placeholderColor, cssText, contentCSSText, paragraphSeparator, paragraphSeparatorClass, paragraphSeparatorStyle})},
             keyboardHeight: 0,
             height: 0,
             isInit: false,

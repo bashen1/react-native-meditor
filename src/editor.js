@@ -5,6 +5,9 @@ function createHTML(options = {}) {
         placeholderColor = '#a9a9a9',
         contentCSSText = '',
         cssText = '',
+        paragraphSeparatorClass = '',
+        paragraphSeparator = 'p',
+        paragraphSeparatorStyle = '',
     } = options;
     //ERROR: HTML height not 100%;
     return `
@@ -77,7 +80,29 @@ function createHTML(options = {}) {
             focusNode = sel.focusNode;
             focusOffset = sel.focusOffset;
         }
-
+        
+        var hasClass = function(ele, cls) {
+          cls = cls || '';
+          if (cls.replace(/\\s/g, '').length == 0) return false; //当cls没有参数时，返回false
+          return new RegExp(' ' + cls + ' ').test(' ' + ele.className + ' ');
+        }
+         
+        var addClass = function(ele, cls) {
+          if (!hasClass(ele, cls)) {
+            ele.className = ele.className == '' ? cls : ele.className + ' ' + cls;
+          }
+        }
+         
+        var removeClass = function(ele, cls) {
+          if (hasClass(ele, cls)) {
+            var newClass = ' ' + elem.className.replace(/[\\t\\r\\n]/g, '') + ' ';
+            while (newClass.indexOf(' ' + cls + ' ') >= 0) {
+              newClass = newClass.replace(' ' + cls + ' ', ' ');
+            }
+            elem.className = newClass.replace(/^\\s+|\\s+$/g, '');
+          }
+        }
+        
         var focusCurrent = function (){
             editor.content.focus();
             try {
@@ -204,15 +229,40 @@ function createHTML(options = {}) {
             content.autocomplete = 'off';
             content.className = "pell-content";
             content.oninput = function (_ref) {
-                // var firstChild = _ref.target.firstChild;
-                // if (firstChild && firstChild.nodeType === 3) exec(formatBlock, '<' + defaultParagraphSeparator + '>');else if (content.innerHTML === '<br>') content.innerHTML = '';
+                var firstChild = _ref.target.firstChild;
+                 if (firstChild && firstChild.nodeType === 3) {
+                    var res = exec(formatBlock, '<' + defaultParagraphSeparator + '>');
+                    if(res){
+                             var separatorClass = '${paragraphSeparatorClass}';
+                            if(separatorClass !== ''){
+                               addClass(window.getSelection().focusNode.parentNode,'oder2')
+                            }
+                            var separatorStyle = '${paragraphSeparatorStyle}';
+                             if(separatorStyle !== ''){
+                                window.getSelection().focusNode.parentNode.setAttribute('style',separatorStyle); 
+                            }
+                         }
+                 } else if (content.innerHTML === '<br>') {
+                     content.innerHTML = '';
+                 }
                 settings.onChange(content.innerHTML);
                 saveSelection();
             };
             content.onkeydown = function (event) {
                 if (event.key === 'Enter' && queryCommandValue(formatBlock) === 'blockquote') {
                     setTimeout(function () {
-                        return exec(formatBlock, '<' + defaultParagraphSeparator + '>');
+                        var res = exec(formatBlock, '<' + defaultParagraphSeparator + '>');
+                         if(res){
+                             var separatorClass = '${paragraphSeparatorClass}';
+                            if(separatorClass !== ''){
+                               addClass(window.getSelection().focusNode.parentNode,'oder2')
+                            }
+                            var separatorStyle = '${paragraphSeparatorStyle}';
+                             if(separatorStyle !== ''){
+                                window.getSelection().focusNode.parentNode.setAttribute('style',separatorStyle); 
+                            }
+                         }
+                         return res;
                     }, 0);
                 }
             };
@@ -282,7 +332,7 @@ function createHTML(options = {}) {
 
         editor = init({
             element: document.getElementById('editor'),
-            defaultParagraphSeparator: 'p',
+            defaultParagraphSeparator: '${paragraphSeparator}',
             onChange: function (){
                 setTimeout(function(){
                     postAction({type: 'CONTENT_CHANGE', data: Actions.content.getHtml()});
