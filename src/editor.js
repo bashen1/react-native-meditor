@@ -232,16 +232,16 @@ function createHTML(options = {}) {
                 var firstChild = _ref.target.firstChild;
                  if (firstChild && firstChild.nodeType === 3) {
                     var res = exec(formatBlock, '<' + defaultParagraphSeparator + '>');
-                    if(res){
-                             var separatorClass = '${paragraphSeparatorClass}';
-                            if(separatorClass !== ''){
-                               addClass(window.getSelection().focusNode.parentNode,'oder2')
-                            }
-                            var separatorStyle = '${paragraphSeparatorStyle}';
-                             if(separatorStyle !== ''){
-                                window.getSelection().focusNode.parentNode.setAttribute('style',separatorStyle); 
-                            }
-                         }
+                    if (res) {
+                        var separatorClass = '${paragraphSeparatorClass}';
+                        if (separatorClass !== '') {
+                           addClass(window.getSelection().focusNode.parentNode, separatorClass)
+                        }
+                        var separatorStyle = '${paragraphSeparatorStyle}';
+                        if(separatorStyle !== ''){
+                            window.getSelection().focusNode.parentNode.setAttribute('style', separatorStyle); 
+                        }
+                    }
                  } else if (content.innerHTML === '<br>') {
                      content.innerHTML = '';
                  }
@@ -252,14 +252,14 @@ function createHTML(options = {}) {
                 if (event.key === 'Enter' && queryCommandValue(formatBlock) === 'blockquote') {
                     setTimeout(function () {
                         var res = exec(formatBlock, '<' + defaultParagraphSeparator + '>');
-                         if(res){
-                             var separatorClass = '${paragraphSeparatorClass}';
-                            if(separatorClass !== ''){
-                               addClass(window.getSelection().focusNode.parentNode,'oder2')
+                         if (res) {
+                            var separatorClass = '${paragraphSeparatorClass}';
+                            if (separatorClass !== '') {
+                               addClass(window.getSelection().focusNode.parentNode, separatorClass)
                             }
                             var separatorStyle = '${paragraphSeparatorStyle}';
-                             if(separatorStyle !== ''){
-                                window.getSelection().focusNode.parentNode.setAttribute('style',separatorStyle); 
+                            if(separatorStyle !== ''){
+                                window.getSelection().focusNode.parentNode.setAttribute('style', separatorStyle); 
                             }
                          }
                          return res;
