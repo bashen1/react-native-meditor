@@ -103,7 +103,7 @@ function createHTML(options = {}) {
           }
         }
         
-        var focusCurrent = function () {
+        var focusCurrent = function (focus) {
             editor.content.focus();
             try {
                 var selection = window.getSelection();
