@@ -103,7 +103,7 @@ function createHTML(options = {}) {
           }
         }
         
-        var focusCurrent = function (){
+        var focusCurrent = function () {
             editor.content.focus();
             try {
                 var selection = window.getSelection();
@@ -179,7 +179,10 @@ function createHTML(options = {}) {
             },
             content: {
                 setDisable: function(dis){ this.blur(); editor.content.contentEditable = !dis},
-                setHtml: function(html) { editor.content.innerHTML = html; },
+                setHtml: function(html) { 
+                    editor.content.innerHTML = html;
+                    postAction({type: 'OFFSET_HEIGHT', data: document.querySelectorAll('#editor')[0].offsetHeight});
+                },
                 getHtml: function() { return editor.content.innerHTML; },
                 blur: function() { editor.content.blur(); },
                 focus: function() { focusCurrent(); },
@@ -308,10 +311,11 @@ function createHTML(options = {}) {
                 postAction({type: 'CONTENT_FOCUSED'});
             });
 
+            // 接收原生信息
             var message = function (event){
                 var msgData = JSON.parse(event.data), action = Actions[msgData.type];
-                if (action ){
-                    if ( action[msgData.name]){
+                if (action){
+                    if (action[msgData.name]){
                         var flag = msgData.name === 'result';
                         flag && focusCurrent();
                         action[msgData.name](msgData.data);
@@ -336,6 +340,8 @@ function createHTML(options = {}) {
             onChange: function (){
                 setTimeout(function(){
                     postAction({type: 'CONTENT_CHANGE', data: Actions.content.getHtml()});
+                    //删除新增内容回传高度
+                    postAction({type: 'OFFSET_HEIGHT', data: document.querySelectorAll('#editor')[0].offsetHeight});
                 }, 10);
             }
         })
