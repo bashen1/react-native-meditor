@@ -154,7 +154,7 @@ function createHTML(options = {}) {
             image: {
                 result: function(url) {
                     if (url){
-                        exec('insertHTML', "<br><div><img src='"+ url +"'/></div><br>");
+                        exec('insertHTML', "<p><img src='"+ url +"'/></p>");
                         Actions.UPDATE_HEIGHT();
                     }
                 }

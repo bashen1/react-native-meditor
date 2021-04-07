@@ -191,6 +191,7 @@ export default class RichTextEditor extends Component {
                     source={viewHTML}
                     opacity={opacity}
                     onLoad={that.init}
+                    allowFileAccess={true}
                 />
                 {Platform.OS === 'android' && <TextInput ref={(ref) => (that._input = ref)} style={styles._input} />}
             </>
@@ -277,6 +278,41 @@ export default class RichTextEditor extends Component {
 
     insertHTML(html) {
         this._sendAction(actions.insertHTML, 'result', html);
+    }
+
+    insertHeading(type) {
+        let action=actions.heading3
+        switch (type){
+            case 'h1':
+                action=actions.heading1;
+                break;
+            case 'h2':
+                action=actions.heading2;
+                break;
+            case 'h3':
+                action=actions.heading3;
+                break;
+            case 'h4':
+                action=actions.heading4;
+                break;
+            case 'h5':
+                action=actions.heading5;
+                break;
+            case 'h6':
+                action=actions.heading6;
+                break;
+            default:
+                action=actions.heading3;
+        }
+        this._sendAction(action, 'result');
+    }
+
+    insertLine() {
+        this._sendAction(actions.insertLine, 'result');
+    }
+
+    insertParagraph() {
+        this._sendAction(actions.setParagraph, 'result');
     }
 
     insertLink(title, url) {

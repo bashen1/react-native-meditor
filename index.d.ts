@@ -118,6 +118,12 @@ declare module 'react-native-pell-rich-editor' {
 
         insertHTML: (html: string) => void;
 
+        insertHeading:(type:string)=>void;
+
+        insertParagraph:()=>void;
+
+        insertLine:()=>void;
+
         init: () => void;
     }
 
