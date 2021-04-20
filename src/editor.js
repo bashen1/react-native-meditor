@@ -130,7 +130,10 @@ function createHTML(options = {}) {
             strikeThrough: { state: function() { return queryCommandState('strikeThrough'); }, result: function() { return exec('strikeThrough'); }},
             heading1: { result: function() { return exec(formatBlock, '<h1>'); }},
             heading2: { result: function() { return exec(formatBlock, '<h2>'); }},
-            heading3: { result: function() { return exec(formatBlock, '<h3>'); }},
+            heading3: { result: function() {
+                window.getSelection().focusNode.parentNode.setAttribute('style', '');
+                var res = exec(formatBlock, '<h3>');
+            }},
             heading4: { result: function() { return exec(formatBlock, '<h4>'); }},
             heading5: { result: function() { return exec(formatBlock, '<h5>'); }},
             heading6: { result: function() { return exec(formatBlock, '<h6>'); }},
@@ -233,7 +236,7 @@ function createHTML(options = {}) {
             content.className = "pell-content";
             content.oninput = function (_ref) {
                 var firstChild = _ref.target.firstChild;
-                 if (firstChild && firstChild.nodeType === 3) {
+                 if (firstChild) {
                     var res = exec(formatBlock, '<' + defaultParagraphSeparator + '>');
                     if (res) {
                         var separatorClass = '${paragraphSeparatorClass}';

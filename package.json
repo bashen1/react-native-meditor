@@ -1,7 +1,7 @@
 {
   "name": "react-native-meditor",
   "description": "React Native Rich Editor",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "main": "src/index.js",
   "author": {
     "name": "bashen1",
