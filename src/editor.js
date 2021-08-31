@@ -1,16 +1,20 @@
 function createHTML(options = {}) {
-    const {
-        backgroundColor = '#FFF',
-        color = '#000033',
-        placeholderColor = '#a9a9a9',
-        contentCSSText = '',
-        cssText = '',
-        paragraphSeparatorClass = '',
-        paragraphSeparator = 'p',
-        paragraphSeparatorStyle = '',
-    } = options;
-    //ERROR: HTML height not 100%;
-    return `
+  const {
+    backgroundColor = '#FFF',
+    color = '#000033',
+    placeholderColor = '#a9a9a9',
+    contentCSSText = '',
+    cssText = '',
+    pasteAsPlainText = false,
+    pasteListener = false,
+    keyDownListener = false,
+    keyUpListener = false,
+    paragraphSeparatorClass = '',
+    paragraphSeparator = 'p',
+    paragraphSeparatorStyle = '',
+  } = options;
+  //ERROR: HTML height not 100%;
+  return `
 <!DOCTYPE html>
 <html>
 <head>
@@ -130,10 +134,7 @@ function createHTML(options = {}) {
             strikeThrough: { state: function() { return queryCommandState('strikeThrough'); }, result: function() { return exec('strikeThrough'); }},
             heading1: { result: function() { return exec(formatBlock, '<h1>'); }},
             heading2: { result: function() { return exec(formatBlock, '<h2>'); }},
-            heading3: { result: function() {
-                window.getSelection().focusNode.parentNode.setAttribute('style', '');
-                var res = exec(formatBlock, '<h3>');
-            }},
+            heading3: { result: function() { return exec(formatBlock, '<h3>'); }},
             heading4: { result: function() { return exec(formatBlock, '<h4>'); }},
             heading5: { result: function() { return exec(formatBlock, '<h5>'); }},
             heading6: { result: function() { return exec(formatBlock, '<h6>'); }},
@@ -236,7 +237,7 @@ function createHTML(options = {}) {
             content.className = "pell-content";
             content.oninput = function (_ref) {
                 var firstChild = _ref.target.firstChild;
-                 if (firstChild) {
+                 if (firstChild && firstChild.nodeType === 3) {
                     var res = exec(formatBlock, '<' + defaultParagraphSeparator + '>');
                     if (res) {
                         var separatorClass = '${paragraphSeparatorClass}';
@@ -296,7 +297,7 @@ function createHTML(options = {}) {
             };
 
             var _handleTouchDT = null;
-            var handleTouch = function (event){
+            var handleSelecting = function (event){
                 event.stopPropagation();
                 _handleTouchDT && clearTimeout(_handleTouchDT);
                 _handleTouchDT = setTimeout(function (){
@@ -304,14 +305,40 @@ function createHTML(options = {}) {
                     saveSelection();
                 }, 50);
             }
-            addEventListener(content, 'touchcancel', handleTouch);
-            addEventListener(content, 'mouseup', handleTouch);
-            addEventListener(content, 'touchend', handleTouch);
+            var postKeyAction = function (event, type){
+                postAction({type: type, data: {keyCode: event.keyCode, key: event.key}});
+            }
+            var handleKeyup = function (event){
+                if (event.keyCode === 8) handleSelecting (event);
+                ${keyUpListener} && postKeyAction(event, "CONTENT_KEYUP")
+            }
+            var handleKeydown = function (event){
+                ${keyDownListener} && postKeyAction(event, "CONTENT_KEYDOWN");
+            }
+            addEventListener(content, 'touchcancel', handleSelecting);
+            addEventListener(content, 'mouseup', handleSelecting);
+            addEventListener(content, 'touchend', handleSelecting);
+
+            // Toolbar buttons activate/deactivate erratically after backspacing
+            addEventListener(content, 'keyup', handleKeyup);
+            addEventListener(content, 'keydown', handleKeydown);
             addEventListener(content, 'blur', function () {
                 postAction({type: 'SELECTION_CHANGE', data: []});
+                postAction({type: 'CONTENT_BLUR'});
             });
             addEventListener(content, 'focus', function () {
                 postAction({type: 'CONTENT_FOCUSED'});
+            });
+            addEventListener(content, 'paste', function (e) {
+                // get text representation of clipboard
+                var text = (e.originalEvent || e).clipboardData.getData('text/plain');
+                ${pasteListener} && postAction({type: 'CONTENT_PASTED', data: text});
+                if (${pasteAsPlainText}) {
+                    // cancel paste
+                    e.preventDefault();
+                    // insert text manually
+                    document.execCommand("insertHTML", false, text);
+                }
             });
 
             // 接收原生信息
